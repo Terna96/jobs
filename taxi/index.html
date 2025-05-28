@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <script src="https://kit.fontawesome.com/0d440e0a88.js" crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"  />
+    
+    
+   
+    <link rel="stylesheet" href="style.css">
+    <title>map</title>
+</head>
+<body>
+    <div class="container">
+      <div class="topp">
+        <div class="topleftt">
+            <i class="fa-solid fa-bars"></i>
+            <i class="fa-light fa-boxes-stacked"></i>
+        </div>
+        <div class="toprytt">
+            <i class="fa-regular fa-expand"></i>
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <i class="fa-solid fa-bell"></i>
+            <i class="fa-solid fa-circle-user"></i>
+        </div>
+      </div>
+        
+      
+        <div id="map"></div>
+    </div>
+
+</body>
+</html>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" ></script>
+
+<script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+<script src="leaflet.js" ></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ var map = L.map('map').setView([6.616, 3.506], 11);
+ L.tileLayer('https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key=sImSM6zs3ZeSqXT9mhWS', {
+     attribution: '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
+ }).addTo(map);
+
+
+
+ //marker icon
+ var taxiIcon = L.icon( {
+   iconUrl: 'img/icon.png',
+   iconSize: [40, 40]
+ })
+
+ //marker
+
+ var marker = L.marker([6.616, 3.506], {icon: taxiIcon}).addTo(map);
+
+ map.on('click', function(e){
+     console.log(e)
+     var secondMarker = L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
+
+      L.Routing.control({
+       waypoints: [
+       L.latLng(6.616, 3.506),
+       L.latLng(e.latlng.lat, e.latlng.lng)
+       ]
+   }).on('routesfound', function(e) {
+       console.log(e)
+       e.routes[0].coordinates.forEach(function(coord, index) 
+       {setTimeout(() => {
+            marker.setLatLng([coord.lat, coord.lng])
+       }, 100 * index);
+     });
+   })
+   
+   
+   .addTo(map);
+ })
+
+   // L.Routing.control({
+      //  waypoints: [
+      //  L.latLng(57.74, 11.94),
+      //  L.latLng(57.6792, 11.949)
+       // ]
+  //  }).addTo(map);
